@@ -1,4 +1,6 @@
-﻿namespace HomeWorkFunction4
+﻿using System.IO;
+
+namespace HomeWorkFunction4
 {
     internal class Program
     {
@@ -9,7 +11,7 @@
 
         static char[,] ReadMap(string mapName)
         {
-
+            string[] newFile = File.ReadAllLines($"Maps/{mapName}");
         }
     }
 }
