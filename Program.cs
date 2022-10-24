@@ -1,4 +1,8 @@
-﻿namespace HomeWorkFunction4
+﻿using System.Numerics;
+using System;
+using System.Runtime.Intrinsics;
+
+namespace HomeWorkFunction4
 {
     internal class Program
     {
@@ -8,17 +12,28 @@
             Random random = new Random();
 
             bool isPlaying = true;
-
-            int packmanX;
-            int packmanY;
-            int packmanDX = 0, packmanDY = 1;
-            int allDots = 0;
             bool isAlive = true;
-            int ghostX, ghostY; ;
-            int ghostDX = 0, ghostDY = -1;
+
+            int packmanPositionX;
+            int packmanPositionY;
+            int packmanDestinationX = 0;
+            int packmanDestionationY = 1;
+
+            int ghostPositionX; 
+            int ghostPositionY;
+            int ghostDestinationX = 0;
+            int ghostDestionationY = -1;
+
+            char wall = '#';
+            char ghost = '$';
+            char player = '@';
+            char emptySpace = ' ';
+            char dot = '.';
+
+            int allDots = 0;
             int collectedDots = 0;
 
-            char[,] map = ReadMap("map1", out packmanX, out packmanY, out ghostX, out ghostY, ref allDots);
+            char[,] map = ReadMap("map1", dot, player, ghost, emptySpace, out packmanPositionX, out packmanPositionY, out ghostPositionX, out ghostPositionY, ref allDots);
 
             DrawMap(map);
 
@@ -30,29 +45,28 @@
                 {
                     ConsoleKeyInfo key = Console.ReadKey(true);
 
-                    ChangeDirection(key, ref packmanDX, ref packmanDY);
+                    ChangeDirection(key, ref packmanDestinationX, ref packmanDestionationY);
                 }
 
-                if (map[packmanX + packmanDX, packmanY + packmanDY] != '#')
+                if (map[packmanPositionX + packmanDestinationX, packmanPositionY + packmanDestionationY] != wall)
                 {
-                    CollectDots(map, packmanX, packmanY, ref collectedDots);
+                    CollectDots(map, dot, emptySpace, packmanPositionX, packmanPositionY, ref collectedDots);
 
-                    Move(map, '@', ref packmanX, ref packmanY, packmanDX, packmanDY);
-
+                    Move(map, player, ref packmanPositionX, ref packmanPositionY, packmanDestinationX, packmanDestionationY);
                 }
 
-                if (map[ghostX + ghostDX, ghostY + ghostDY] != '#')
+                if (map[ghostPositionX + ghostDestinationX, ghostPositionY + ghostDestionationY] != wall)
                 {
-                    Move(map, '$', ref ghostX, ref ghostY, ghostDX, ghostDY);
+                    Move(map, ghost, ref ghostPositionX, ref ghostPositionY, ghostDestinationX, ghostDestionationY);
                 }
                 else
                 {
-                    ChangeDirection(random, ref ghostDX, ref ghostDY);
+                    ChangeDirection(random, ref ghostDestinationX, ref ghostDestionationY);
                 }
 
                 System.Threading.Thread.Sleep(250);
 
-                if (ghostX == packmanX && ghostY == packmanY)
+                if (ghostPositionX == packmanPositionX && ghostPositionY == packmanPositionY)
                 {
                     isAlive = false;
                 }
@@ -76,63 +90,82 @@
 
         }
 
-        static void CollectDots(char[,] map, int packmanX, int packmanY, ref int collectedDots)
+        static void CollectDots(char[,] map, char dot, char emptySpace, int packmanPositionX, int packmanPositionY, ref int collectedDots)
         {
-            if (map[packmanX, packmanY] == '.')
+            if (map[packmanPositionX, packmanPositionY] == dot)
             {
                 collectedDots++;
-                map[packmanX, packmanY] = ' ';
+                map[packmanPositionX, packmanPositionY] = emptySpace;
             }
         }
 
-        static void Move(char[,] map, char symbol, ref int X, ref int Y, int DX, int DY)
+        static void Move(char[,] map, char symbol, ref int vectorX, ref int vectorY, int destinationX, int destinationY)
         {
-            Console.SetCursorPosition(Y, X);
-            Console.Write(map[X, Y]);
+            Console.SetCursorPosition(vectorY, vectorX);
+            Console.Write(map[vectorX, vectorY]);
 
-            X += DX;
-            Y += DY;
+            vectorX += destinationX;
+            vectorY += destinationY;
 
-            Console.SetCursorPosition(Y, X);
+            Console.SetCursorPosition(vectorY, vectorX);
             Console.Write(symbol);
         }
 
-        static void ChangeDirection(ConsoleKeyInfo key, ref int DX, ref int DY)
+        static void SetPosition(char[,] map, ref int vectorX, ref int vectorY)
         {
+            Console.SetCursorPosition(vectorY, vectorX);
+            Console.Write(map[vectorX, vectorY]);
+        }
+
+        static void ChangeDirection(ConsoleKeyInfo key, ref int destinationX, ref int destinationY)
+        {
+            const int CommandUpArrow = (int)ConsoleKey.UpArrow;
+            const int CommandDownArrow = (int)ConsoleKey.DownArrow;
+            const int CommandLeftArrow = (int)ConsoleKey.LeftArrow;
+            const int CommandRightArrow = (int)ConsoleKey.RightArrow;
+
             switch (key.Key)
             {
-                case ConsoleKey.UpArrow:
-                    DX = -1; DY = 0;
+                case (ConsoleKey)CommandUpArrow:
+                    destinationX = -1; 
+                    destinationY = 0;
                     break;
-                case ConsoleKey.DownArrow:
-                    DX = 1; DY = 0;
+                case (ConsoleKey)CommandDownArrow:
+                    destinationX = 1; 
+                    destinationY = 0;
                     break;
-                case ConsoleKey.LeftArrow:
-                    DX = 0; DY = -1;
+                case (ConsoleKey)CommandLeftArrow:
+                    destinationX = 0; 
+                    destinationY = -1;
                     break;
-                case ConsoleKey.RightArrow:
-                    DX = 0; DY = 1;
+                case (ConsoleKey)CommandRightArrow:
+                    destinationX = 0; 
+                    destinationY = 1;
                     break;
             }
         }
 
-        static void ChangeDirection(Random random, ref int DX, ref int DY)
+        static void ChangeDirection(Random random, ref int destinationX, ref int destinationY)
         {
-            int ghostDir = random.Next(1, 5);
+            int ghostDirection = random.Next(1, 5);
 
-            switch (ghostDir)
+            switch (ghostDirection)
             {
                 case 1:
-                    DX = -1; DY = 0;
+                    destinationX = -1; 
+                    destinationY = 0;
                     break;
                 case 2:
-                    DX = 1; DY = 0;
+                    destinationX = 1; 
+                    destinationY = 0;
                     break;
                 case 3:
-                    DX = 0; DY = -1;
+                    destinationX = 0; 
+                    destinationY = -1;
                     break;
                 case 4:
-                    DX = 0; DY = 1;
+                    destinationX = 0; 
+                    destinationY = 1;
                     break;
             }
         }
@@ -142,21 +175,23 @@
 
             for (int i = 0; i < map.GetLength(0); i++)
             {
+
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
                     Console.Write(map[i, j]);
                 }
+
                 Console.WriteLine();
             }
 
         }
 
-        static char[,] ReadMap(string mapName, out int packmanX, out int packmanY, out int ghostX, out int ghostY, ref int allDots)
+        static char[,] ReadMap(string mapName, char dot, char player, char ghost, char emptySpace, out int packmanPositionX, out int packmanPositionY, out int ghostPositionX, out int ghostPositionY, ref int allDots)
         {
-            packmanX = 0;
-            packmanY = 0;
-            ghostX = 0;
-            ghostY = 0;
+            packmanPositionX = 0;
+            packmanPositionY = 0;
+            ghostPositionX = 0;
+            ghostPositionY = 0;
 
             string[] newFile = File.ReadAllLines($"Maps/{mapName}.txt");
             char[,] map = new char[newFile.Length, newFile[0].Length];
@@ -167,21 +202,21 @@
                 {
                     map[i, j] = newFile[i][j];
 
-                    if (map[i, j] == '@')
+                    if (map[i, j] == player)
                     {
-                        packmanX = i;
-                        packmanY = j;
-                        map[i, j] = '.';
+                        packmanPositionX = i;
+                        packmanPositionY = j;
+                        map[i, j] = dot;
                     }
-                    else if (map[i, j] == '$')
+                    else if (map[i, j] == ghost)
                     {
-                        ghostX = i;
-                        ghostY = j;
-                        map[i, j] = '.';
+                        ghostPositionX = i;
+                        ghostPositionY = j;
+                        map[i, j] = dot;
                     }
-                    else if (map[i, j] == ' ')
+                    else if (map[i, j] == emptySpace)
                     {
-                        map[i, j] = '.';
+                        map[i, j] = dot;
                         allDots++;
                     }
                 }
