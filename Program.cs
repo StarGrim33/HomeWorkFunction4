@@ -75,7 +75,6 @@ namespace HomeWorkFunction4
                 {
                     isPlaying = false;
                 }
-
             }
 
             Console.SetCursorPosition(0, 25);
@@ -87,7 +86,6 @@ namespace HomeWorkFunction4
             {
                 Console.WriteLine("Вы лох");
             }
-
         }
 
         static void CollectDots(char[,] map, char dot, char emptySpace, int packmanPositionX, int packmanPositionY, ref int collectedDots)
@@ -101,8 +99,7 @@ namespace HomeWorkFunction4
 
         static void Move(char[,] map, char symbol, ref int vectorX, ref int vectorY, int destinationX, int destinationY)
         {
-            Console.SetCursorPosition(vectorY, vectorX);
-            Console.Write(map[vectorX, vectorY]);
+            SetPosition(map, ref  vectorX, ref vectorY);
 
             vectorX += destinationX;
             vectorY += destinationY;
@@ -124,22 +121,21 @@ namespace HomeWorkFunction4
             const int CommandLeftArrow = (int)ConsoleKey.LeftArrow;
             const int CommandRightArrow = (int)ConsoleKey.RightArrow;
 
+            destinationX = 0;
+            destinationY = 0;
+
             switch (key.Key)
             {
                 case (ConsoleKey)CommandUpArrow:
                     destinationX = -1; 
-                    destinationY = 0;
                     break;
                 case (ConsoleKey)CommandDownArrow:
                     destinationX = 1; 
-                    destinationY = 0;
                     break;
                 case (ConsoleKey)CommandLeftArrow:
-                    destinationX = 0; 
                     destinationY = -1;
                     break;
                 case (ConsoleKey)CommandRightArrow:
-                    destinationX = 0; 
                     destinationY = 1;
                     break;
             }
@@ -172,10 +168,8 @@ namespace HomeWorkFunction4
 
         static void DrawMap(char[,] map)
         {
-
             for (int i = 0; i < map.GetLength(0); i++)
             {
-
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
                     Console.Write(map[i, j]);
@@ -183,7 +177,6 @@ namespace HomeWorkFunction4
 
                 Console.WriteLine();
             }
-
         }
 
         static char[,] ReadMap(string mapName, char dot, char player, char ghost, char emptySpace, out int packmanPositionX, out int packmanPositionY, out int ghostPositionX, out int ghostPositionY, ref int allDots)
@@ -222,7 +215,6 @@ namespace HomeWorkFunction4
                 }
             }
             return map;
-
         }
     }
 }
