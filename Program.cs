@@ -2,6 +2,10 @@
 using System;
 using System.Runtime.Intrinsics;
 
+using System.Numerics;
+using System;
+using System.Runtime.Intrinsics;
+
 namespace HomeWorkFunction4
 {
     internal class Program
@@ -99,7 +103,7 @@ namespace HomeWorkFunction4
 
         static void Move(char[,] map, char symbol, ref int vectorX, ref int vectorY, int destinationX, int destinationY)
         {
-            SetPosition(map, ref  vectorX, ref vectorY);
+            DrawObject(map, vectorX, vectorY);
 
             vectorX += destinationX;
             vectorY += destinationY;
@@ -108,10 +112,9 @@ namespace HomeWorkFunction4
             Console.Write(symbol);
         }
 
-        static void SetPosition(char[,] map, ref int vectorX, ref int vectorY)
+        static void DrawObject(char[,] map, int vectorX, int vectorY)
         {
-            Console.SetCursorPosition(vectorY, vectorX);
-            Console.Write(map[vectorX, vectorY]);
+            RenderElementGame(map, vectorX, vectorY);
         }
 
         static void ChangeDirection(ConsoleKeyInfo key, ref int destinationX, ref int destinationY)
@@ -215,6 +218,12 @@ namespace HomeWorkFunction4
                 }
             }
             return map;
+        }
+
+        static void RenderElementGame(char[,] map, int vectorX, int vectorY)
+        {
+            Console.SetCursorPosition(vectorY, vectorX);
+            Console.Write(map[vectorX, vectorY]);
         }
     }
 }
