@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using System;
 using System.Runtime.Intrinsics;
 
@@ -23,7 +23,7 @@ namespace HomeWorkFunction4
             int packmanDestinationX = 0;
             int packmanDestionationY = 1;
 
-            int ghostPositionX; 
+            int ghostPositionX;
             int ghostPositionY;
             int ghostDestinationX = 0;
             int ghostDestionationY = -1;
@@ -45,6 +45,7 @@ namespace HomeWorkFunction4
             {
                 Console.SetCursorPosition(0, 20);
                 Console.WriteLine($"Собрано: {collectedDots}/{allDots}");
+
                 if (Console.KeyAvailable)
                 {
                     ConsoleKeyInfo key = Console.ReadKey(true);
@@ -82,6 +83,7 @@ namespace HomeWorkFunction4
             }
 
             Console.SetCursorPosition(0, 25);
+
             if (collectedDots == allDots)
             {
                 Console.WriteLine("Вы победили");
@@ -103,7 +105,7 @@ namespace HomeWorkFunction4
 
         static void Move(char[,] map, char symbol, ref int vectorX, ref int vectorY, int destinationX, int destinationY)
         {
-            DrawObject(map, vectorX, vectorY);
+            RenderElementGame(map, vectorX, vectorY);
 
             vectorX += destinationX;
             vectorY += destinationY;
@@ -112,33 +114,26 @@ namespace HomeWorkFunction4
             Console.Write(symbol);
         }
 
-        static void DrawObject(char[,] map, int vectorX, int vectorY)
-        {
-            RenderElementGame(map, vectorX, vectorY);
-        }
-
         static void ChangeDirection(ConsoleKeyInfo key, ref int destinationX, ref int destinationY)
         {
-            const int CommandUpArrow = (int)ConsoleKey.UpArrow;
-            const int CommandDownArrow = (int)ConsoleKey.DownArrow;
-            const int CommandLeftArrow = (int)ConsoleKey.LeftArrow;
-            const int CommandRightArrow = (int)ConsoleKey.RightArrow;
-
             destinationX = 0;
             destinationY = 0;
 
             switch (key.Key)
             {
-                case (ConsoleKey)CommandUpArrow:
-                    destinationX = -1; 
+                case ConsoleKey.UpArrow:
+                    destinationX = -1;
                     break;
-                case (ConsoleKey)CommandDownArrow:
-                    destinationX = 1; 
+
+                case ConsoleKey.DownArrow:
+                    destinationX = 1;
                     break;
-                case (ConsoleKey)CommandLeftArrow:
+
+                case ConsoleKey.LeftArrow:
                     destinationY = -1;
                     break;
-                case (ConsoleKey)CommandRightArrow:
+
+                case ConsoleKey.RightArrow:
                     destinationY = 1;
                     break;
             }
@@ -151,19 +146,22 @@ namespace HomeWorkFunction4
             switch (ghostDirection)
             {
                 case 1:
-                    destinationX = -1; 
+                    destinationX = -1;
                     destinationY = 0;
                     break;
+
                 case 2:
-                    destinationX = 1; 
+                    destinationX = 1;
                     destinationY = 0;
                     break;
+
                 case 3:
-                    destinationX = 0; 
+                    destinationX = 0;
                     destinationY = -1;
                     break;
+
                 case 4:
-                    destinationX = 0; 
+                    destinationX = 0;
                     destinationY = 1;
                     break;
             }
@@ -217,6 +215,7 @@ namespace HomeWorkFunction4
                     }
                 }
             }
+
             return map;
         }
 
