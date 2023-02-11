@@ -116,24 +116,29 @@ namespace HomeWorkFunction4
 
         static void ChangeDirection(ConsoleKeyInfo key, ref int destinationX, ref int destinationY)
         {
+            const ConsoleKey CommandUpArrow = ConsoleKey.UpArrow;
+            const ConsoleKey CommandDownArrow = ConsoleKey.DownArrow;
+            const ConsoleKey CommandLeftArrow = ConsoleKey.LeftArrow;
+            const ConsoleKey CommandRightArrow = ConsoleKey.RightArrow;
+
             destinationX = 0;
             destinationY = 0;
 
             switch (key.Key)
             {
-                case ConsoleKey.UpArrow:
+                case CommandUpArrow:
                     destinationX = -1;
                     break;
 
-                case ConsoleKey.DownArrow:
+                case CommandDownArrow:
                     destinationX = 1;
                     break;
 
-                case ConsoleKey.LeftArrow:
+                case CommandLeftArrow:
                     destinationY = -1;
                     break;
 
-                case ConsoleKey.RightArrow:
+                case CommandRightArrow:
                     destinationY = 1;
                     break;
             }
